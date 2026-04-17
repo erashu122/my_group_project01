@@ -26,7 +26,7 @@ const ActivitiesPage = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="lg" sx={{ py: { xs: 2, sm: 4 }, px: { xs: 1.5, sm: 3 } }}>
       <Stack spacing={3}>
         <Card sx={{ borderRadius: 3, boxShadow: 3 }}>
           <CardContent>
@@ -102,7 +102,7 @@ function App() {
               !token ? (
                 <Container maxWidth="sm" sx={{ py: 10 }}>
                   <Card sx={{ borderRadius: 4, boxShadow: 6 }}>
-                    <CardContent sx={{ p: 5, textAlign: "center" }}>
+                    <CardContent sx={{ p: { xs: 3, sm: 5 }, textAlign: "center" }}>
                       <Typography variant="h4" gutterBottom sx={{ fontWeight: 700 }}>
                         Welcome to Fitness Tracker
                       </Typography>
@@ -111,10 +111,10 @@ function App() {
                       </Typography>
 
                       <Stack direction={{ xs: "column", sm: "row" }} spacing={2} justifyContent="center">
-                        <Button variant="contained" size="large" onClick={logIn}>
+                        <Button variant="contained" size="large" fullWidth={false} sx={{ minWidth: { sm: 140 } }} onClick={logIn}>
                           Login
                         </Button>
-                        <Button variant="outlined" size="large" onClick={() => (window.location.href = "/signup")}>
+                        <Button variant="outlined" size="large" fullWidth={false} sx={{ minWidth: { sm: 140 } }} onClick={() => (window.location.href = "/signup")}>
                           Sign Up
                         </Button>
                       </Stack>
@@ -133,7 +133,7 @@ function App() {
             color="primary"
             aria-label="open-chatgpt"
             onClick={() => window.open("https://chat.openai.com", "_blank", "noopener,noreferrer")}
-            sx={{ position: "fixed", right: 24, bottom: 24, fontSize: 22 }}
+            sx={{ position: "fixed", right: { xs: 16, sm: 24 }, bottom: { xs: 16, sm: 24 }, fontSize: { xs: 20, sm: 22 } }}
           >
             🤖
           </Fab>
