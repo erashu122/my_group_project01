@@ -32,6 +32,12 @@
 set -euf
 [ "${MVNW_VERBOSE-}" != debug ] || set -x
 
+# Prefer system Maven when available to avoid wrapper download issues in restricted networks.
+# Set MVNW_FORCE_WRAPPER=true to force wrapper behavior.
+if [ "${MVNW_FORCE_WRAPPER-}" != "true" ] && command -v mvn >/dev/null 2>&1; then
+  exec mvn "$@"
+fi
+
 # OS specific support.
 native_path() { printf %s\\n "$1"; }
 case "$(uname)" in
