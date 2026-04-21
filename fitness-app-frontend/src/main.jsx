@@ -1,20 +1,46 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App";
+import keycloak from "./keycloak";
 
-import { Provider } from 'react-redux'
-import { store } from './store/store'
+// 🔐 Initialize Keycloak FIRST
+keycloak
+  .init({
+    onLoad: "login-required",
+    pkceMethod: "S256",
+    checkLoginIframe: false, // ✅ avoid login loop bugs
+  })
+  .then((authenticated) => {
+    if (!authenticated) {
+      keycloak.login();
+      return;
+    }
 
-import App from './App'
-import { AuthProvider } from 'react-oauth2-code-pkce'
-import { authConfig } from './authConfig'
+    console.log("✅ Keycloak Authenticated");
 
-// As of React 18
-const root = ReactDOM.createRoot(document.getElementById('root'))
-root.render(
-  <AuthProvider authConfig={authConfig}
-                loadingComponent={<div>Loading...</div>}>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </AuthProvider>,
-)
+    // 🔄 Auto Token Refresh (VERY IMPORTANT)
+    setInterval(() => {
+      keycloak
+        .updateToken(70)
+        .then((refreshed) => {
+          if (refreshed) {
+            console.log("🔄 Token refreshed");
+          }
+        })
+        .catch(() => {
+          console.error("❌ Token refresh failed");
+          keycloak.logout();
+        });
+    }, 60000);
+
+    // 🚀 Render App ONLY after auth ready
+    ReactDOM.createRoot(document.getElementById("root")).render(
+      <BrowserRouter>
+        <App keycloak={keycloak} />
+      </BrowserRouter>
+    );
+  })
+  .catch((err) => {
+    console.error("❌ Keycloak init failed", err);
+  });

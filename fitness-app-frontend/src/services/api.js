@@ -1,35 +1,64 @@
 import axios from "axios";
-
-const API_URL = 'http://localhost:8080/api';
+import keycloak from "../keycloak";
 
 const api = axios.create({
-    baseURL: API_URL
+  baseURL: "http://localhost:8080",
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-// interceptor
-api.interceptors.request.use((config) => {
-    const userId = localStorage.getItem('userId');
-    const token = localStorage.getItem('token');
-
-    if (token) {
-        config.headers['Authorization'] = `Bearer ${token}`;
+// 🔐 REQUEST INTERCEPTOR
+api.interceptors.request.use(async (config) => {
+  if (keycloak?.token) {
+    try {
+      await keycloak.updateToken(30);
+      config.headers.Authorization = `Bearer ${keycloak.token}`;
+    } catch (err) {
+      console.error("Token refresh failed");
+      keycloak.logout();
     }
-
-    if (userId) {
-        config.headers['X-User-ID'] = userId;
-    }
-
-    return config;
+  }
+  return config;
 });
 
-// APIs
-export const getActivities = () => api.get('/activities');
+// ❌ ERROR HANDLING FIX
+api.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    console.error("API ERROR:", err?.response || err);
 
-export const addActivity = (activity) => api.post('/activities', activity);
+    if (err?.response?.status === 401) {
+      keycloak.logout();
+    }
 
-export const getActivityDetail = (id) => api.get(`/recommendations/activity/${id}`);
+    return Promise.reject(err);
+  }
+);
 
-// ✅ NEW: get logged-in user from backend
-export const getCurrentUser = () => api.get('/users/me');
+// =========================
+// ACTIVITY APIs
+// =========================
+export const addActivity = (data) => api.post("/api/activities", data);
+export const getActivities = () => api.get("/api/activities");
+export const getActivityDetail = (id) =>
+  api.get(`/api/activities/id/${id}`);
+
+// =========================
+// AI APIs
+// =========================
+export const getAIRecommendation = (data) =>
+  api.post("/api/ai/analyze", data);
+
+export const chatWithAI = (message) =>
+  api.post("/api/ai/chat", { message });
+
+// =========================
+// PDF
+// =========================
+export const generateReport = (content) =>
+  api.post("/api/report", content, {
+    responseType: "blob",
+  });
 
 export default api;

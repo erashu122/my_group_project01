@@ -1,5 +1,28 @@
+server:
+  port: 8080
+
 spring:
   application:
-    name: api-gateway
-  config:
-    import: optional:configserver:http://localhost:8888
+    name: gateway
+
+  cloud:
+    gateway:
+      routes:
+        - id: activity-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/activities/**
+          filters:
+            - TokenRelay
+
+        - id: ai-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/ai/**,/api/recommendations/**,/api/report/**
+          filters:
+            - TokenRelay
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8181/realms/fitness-app
