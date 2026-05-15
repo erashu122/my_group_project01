@@ -11,6 +11,15 @@
         <module name="activityservice" />
         <module name="gateway" />
       </profile>
+      <profile name="Annotation profile for prediction-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
+        </processorPath>
+        <module name="prediction-service" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="configserver" target="17" />
@@ -25,6 +34,7 @@
       <module name="configserver" options="-parameters" />
       <module name="eureka" options="-parameters" />
       <module name="gateway" options="-parameters" />
+      <module name="prediction-service" options="-parameters" />
       <module name="userservice" options="-parameters" />
     </option>
   </component>

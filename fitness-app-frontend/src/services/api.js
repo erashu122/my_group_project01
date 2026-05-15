@@ -37,6 +37,12 @@ api.interceptors.response.use(
 );
 
 // =========================
+// PREDICTION APIs
+// =========================
+export const getPredictionReport = () =>
+  axios.get("http://localhost:8086/api/predictions/1");
+
+// =========================
 // ACTIVITY APIs
 // =========================
 export const addActivity = (data) => api.post("/api/activities", data);
