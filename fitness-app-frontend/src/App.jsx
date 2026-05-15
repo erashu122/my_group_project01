@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import Navbar from "./layout/Navbar";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
@@ -19,6 +20,8 @@ function App({ keycloak }) {
         <Route path="/" element={<Dashboard />} />
         <Route path="/profile" element={<Profile keycloak={keycloak} />} />
       </Routes>
+      
+      <SpeedInsights />
     </>
   );
 }
