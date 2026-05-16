@@ -24,8 +24,12 @@ public class ActivityService {
         activity.setDuration(request.getDuration());
         activity.setCaloriesBurned(request.getCaloriesBurned());
 
-        // 🔥 IMPORTANT
         activity.setUserId(request.getUserId());
+
+        // ✅ NEW
+        activity.setIntensity(request.getIntensity());
+        activity.setDate(request.getDate());
+        activity.setNotes(request.getNotes());
 
         Activity saved = activityRepository.save(activity);
 
@@ -34,6 +38,7 @@ public class ActivityService {
 
     // ✅ USER SPECIFIC DATA
     public List<ActivityResponse> getUserActivities(String userId) {
+
         return activityRepository.findByUserId(userId)
                 .stream()
                 .map(this::map)
@@ -51,6 +56,7 @@ public class ActivityService {
 
     // ✅ MAPPER
     private ActivityResponse map(Activity activity) {
+
         ActivityResponse res = new ActivityResponse();
 
         res.setId(activity.getId());
@@ -58,6 +64,11 @@ public class ActivityService {
         res.setDuration(activity.getDuration());
         res.setCaloriesBurned(activity.getCaloriesBurned());
         res.setUserId(activity.getUserId());
+
+        // ✅ NEW
+        res.setIntensity(activity.getIntensity());
+        res.setDate(activity.getDate());
+        res.setNotes(activity.getNotes());
 
         return res;
     }

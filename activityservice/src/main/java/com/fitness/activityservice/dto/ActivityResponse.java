@@ -6,8 +6,19 @@ import lombok.Data;
 public class ActivityResponse {
 
     private String id;
+
     private String activityType;
+
     private int duration;
+
     private int caloriesBurned;
+
     private String userId;
+
+    // ✅ NEW
+    private String intensity;
+
+    private String date;
+
+    private String notes;
 }

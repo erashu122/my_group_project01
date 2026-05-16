@@ -12,7 +12,17 @@ public class Activity {
     private String id;
 
     private String activityType;
+
     private int duration;
+
     private int caloriesBurned;
+
     private String userId;
+
+    // ✅ ADD THESE
+    private String intensity;
+
+    private String date;
+
+    private String notes;
 }
